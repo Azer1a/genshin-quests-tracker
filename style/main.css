@@ -1,0 +1,248 @@
+/* layout */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg-deep);
+  color: var(--text);
+}
+
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  height: 100vh;
+}
+
+.content {
+  padding: 32px 40px;
+  overflow-y: auto;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.page-lead {
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+/* sidebar */
+
+.sidebar {
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 12px;
+}
+
+.sidebar__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px 24px;
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  text-align: left;
+  width: 100%;
+  transition: background .15s, color .15s;
+}
+
+.sidebar__item:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+.sidebar__item.is-active {
+  background: var(--bg-active);
+  color: var(--text-invert);
+}
+
+.sidebar__icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.sidebar__logo-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.sidebar__chevron {
+  margin-left: auto;
+  transition: transform .2s;
+}
+
+.sidebar__group.is-open .sidebar__chevron {
+  transform: rotate(90deg);
+}
+
+.sidebar__submenu {
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 20px;
+  margin-top: 2px;
+}
+
+.sidebar__group.is-open .sidebar__submenu {
+  display: flex;
+}
+
+.sidebar__item--child {
+  font-size: 14px;
+  padding: 8px 12px;
+}
+
+/* content */
+/* Главная */
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.home-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.home-card h3 {
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+/* Квесты */
+.quests-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.regions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.region-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  transition: background .15s, color .15s;
+}
+
+.region-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text);
+}
+
+.region-btn.is-active {
+  background: var(--bg-active);
+  color: var(--text-invert);
+  border-color: var(--border-strong);
+}
+
+.region-btn__progress {
+  font-size: 13px;
+  opacity: .8;
+}
+
+.quests__header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.quests__header h2 {
+  font-size: 22px;
+}
+
+.quests__progress {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.quest-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quest {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-soft);
+  transition: background .15s, box-shadow .15s;
+}
+
+.quest:hover {
+  background: var(--bg-panel-2);
+  box-shadow: var(--shadow-card);
+}
+
+.quest.is-done {
+  opacity: .6;
+}
+
+.quest.is-done .quest__label {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.quest__label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.quest__meta {
+  margin-top: 4px;
+  margin-left: 30px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.quest__label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}

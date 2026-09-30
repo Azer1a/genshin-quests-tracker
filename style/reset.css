@@ -1,0 +1,69 @@
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+input {
+  font: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+:root {
+  /* Фоны */
+  --bg-deep: #f6efe4;
+  --bg-panel: #fdf8ee;
+  --bg-panel-2: #f0e6d2;
+  --bg-hover: #ecdfc5;
+  /* hover на кнопках меню */
+  --bg-active: #e8b25a;
+  /* активная кнопка*/
+
+  /* Акценты */
+  --accent: #c9922f;
+  --accent-soft: #e8b25a;
+  --gold: #e8b25a;
+
+  /* Тёмно-синий (контраст, «плащ» Паймон) */
+  --navy: #2a2f4a;
+  --navy-soft: #3d4366;
+
+  /* Текст */
+  --text: #2a2f4a;
+  --text-muted: #7a7365;
+  --text-invert: #fdf8ee;
+
+  /* Границы */
+  --border: #e0d3b8;
+  --border-strong: #c9922f;
+
+  --radius: 10px;
+  --sidebar-w: 260px;
+
+  --shadow-soft: 0 1px 2px rgba(42, 47, 74, 0.06);
+  --shadow-card: 0 2px 6px rgba(42, 47, 74, 0.08);
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg-deep);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}

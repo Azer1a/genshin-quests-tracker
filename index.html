@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genshin Quest Tracker</title>
+  <link rel="stylesheet" href="style/main.css" />
+  <link rel="stylesheet" href="style/reset.css" />
+  <script type="module" src="js/app.js" defer></script>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar__logo">
+        <img class="sidebar__logo-icon" src="assets/images/Icon_Paimon_Menu.png" alt="" />
+        <span class="sidebar__logo-name">Quest Tracker</span>
+      </div>
+
+      <nav class="sidebar__nav">
+        <button class="sidebar__item" data-page="home">
+          <img class="sidebar__icon" src="assets/images/home.png" alt="" />
+          <span>Главная</span>
+        </button>
+
+        <div class="sidebar__group">
+          <button class="sidebar__item sidebar__item--parent" data-page="quests">
+            <img class="sidebar__icon" src="assets/images/Quest.png" alt="" />
+            <span>Квесты</span>
+            <span class="sidebar__chevron">›</span>
+          </button>
+          <div class="sidebar__submenu" id="category-submenu"></div>
+        </div>
+
+        <button class="sidebar__item" data-page="settings">
+          <img class="sidebar__icon" src="assets/images/settings.png" alt="" />
+          <span>Настройки</span>
+        </button>
+      </nav>
+    </aside>
+
+    <main class="content" id="content"></main>
+  </div>
+</body>
+</html>
