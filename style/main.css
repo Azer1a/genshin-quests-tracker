@@ -204,6 +204,9 @@ body {
 }
 
 .quest {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   background: var(--bg-panel);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -226,23 +229,32 @@ body {
   color: var(--text-muted);
 }
 
+.quest__text {
+  flex: 1;
+  min-width: 0;
+}
+
 .quest__label {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  display: block;
   cursor: pointer;
+}
+
+.quest__name {
+  display: block;
+  word-wrap: break-word;
 }
 
 .quest__meta {
   margin-top: 4px;
-  margin-left: 30px;
   font-size: 13px;
   color: var(--text-muted);
 }
 
-.quest__label input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+.quest__checkbox {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
   accent-color: var(--accent);
   cursor: pointer;
+  align-self: center;
 }

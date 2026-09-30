@@ -211,7 +211,7 @@ function renderQuestListFlat() {
   if (!container) return;
 
   const quests = getQuestsFlat(state.category);
-  renderQuestItems(container, quests, CATEGORIES[state.category]?.label ?? '', () => {
+  renderQuestItems(container, quests, 'Пройдено', () => {
     renderQuestListFlat();
   });
 }
@@ -275,16 +275,13 @@ function renderQuestItems(container, quests, title, onToggle, isMeeting = false)
     const li = document.createElement('li');
     li.className = 'quest' + (state.completed.has(quest.id) ? ' is-done' : '');
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = state.completed.has(quest.id);
-    checkbox.addEventListener('change', () => {
-      toggleQuest(quest.id);
-      onToggle();
-    });
+    // Левая часть текст
+    const textWrap = document.createElement('div');
+    textWrap.className = 'quest__text';
 
     const label = document.createElement('label');
     label.className = 'quest__label';
+    label.htmlFor = `q_${quest.id}`;
 
     let mainText;
     if (isMeeting) {
@@ -300,8 +297,8 @@ function renderQuestItems(container, quests, title, onToggle, isMeeting = false)
     const mainSpan = document.createElement('span');
     mainSpan.className = 'quest__name';
     mainSpan.textContent = mainText;
-    label.append(checkbox, mainSpan);
-    li.appendChild(label);
+    label.appendChild(mainSpan);
+    textWrap.appendChild(label);
 
     // Подпись снизу
     const metaParts = [];
@@ -327,9 +324,21 @@ function renderQuestItems(container, quests, title, onToggle, isMeeting = false)
       const meta = document.createElement('div');
       meta.className = 'quest__meta';
       meta.textContent = metaParts.join(' · ');
-      li.appendChild(meta);
+      textWrap.appendChild(meta);
     }
 
+    // Правая часть чекбокс 
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = `q_${quest.id}`;
+    checkbox.className = 'quest__checkbox';
+    checkbox.checked = state.completed.has(quest.id);
+    checkbox.addEventListener('change', () => {
+      toggleQuest(quest.id);
+      onToggle();
+    });
+
+    li.append(textWrap, checkbox);
     list.appendChild(li);
   });
 }
