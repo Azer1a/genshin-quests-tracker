@@ -43,10 +43,116 @@ function renderHome(root) {
 }
 
 function renderSettings(root) {
+  const isConnected = state.driveConnected ?? false;
+  const userEmail = state.driveEmail ?? 'user@gmail.com';
+  const lastSync = state.driveLastSync ?? null;
+
   root.innerHTML = `
     <h1 class="page-title">Настройки</h1>
-    <p class="page-lead">Скоро здесь появятся настройки синхронизации и внешнего вида.</p>
+
+    <section class="settings-section">
+      <h2 class="settings-section__title">Синхронизация</h2>
+      <p class="settings-section__lead">
+        Подключите Google Drive, чтобы сохранять прогресс в облаке
+        и открывать его с любого устройства.
+      </p>
+
+      ${isConnected
+        ? renderDriveConnected(userEmail, lastSync)
+        : renderDriveDisconnected()}
+    </section>
   `;
+
+  initSettingsHandlers();
+}
+
+function renderDriveDisconnected() {
+  return `
+    <div class="drive-card">
+      <div class="drive-card__row">
+        <p class="drive-card__text">
+          Прогресс хранится только в этом браузере. Подключите Google Drive,
+          чтобы не потерять его при очистке данных или переходе на другое устройство.
+        </p>
+      </div>
+      <button class="btn btn--primary" id="drive-connect">
+        <span class="btn__icon">☁</span>
+        Подключить Google Drive
+      </button>
+    </div>
+  `;
+}
+
+function renderDriveConnected(email, lastSync) {
+  const dateText = lastSync
+    ? formatDate(lastSync)
+    : 'ещё не синхронизировалось';
+
+  return `
+    <div class="drive-card">
+      <p class="drive-card__text">
+        Quest Tracker использует данные приложения на вашем Google Диске
+        для сохранения и синхронизации прогресса.
+      </p>
+      <p class="drive-card__text">
+        Приложение может читать и записывать только те файлы, которые создало само.
+      </p>
+
+      <button class="btn btn--ghost" id="drive-disconnect">
+        <span class="btn__icon">▲</span>
+        Выйти из Google Диска
+      </button>
+
+      <div class="drive-field">
+        <span class="drive-field__label">Адрес электронной почты:</span>
+        <span class="drive-field__value" title="${email}">${email}</span>
+      </div>
+
+      <div class="drive-field">
+        <span class="drive-field__label">Статус синхронизации:</span>
+        <span class="drive-status drive-status--ok">
+          Синхронизировано
+          <span>✓</span>
+        </span>
+      </div>
+
+      <div class="drive-field">
+        <span class="drive-field__label">Последняя синхронизация:</span>
+        <span class="drive-field__value">${dateText}</span>
+      </div>
+
+      <button class="btn btn--primary" id="drive-sync-now">
+        Синхронизировать сейчас
+      </button>
+    </div>
+  `;
+}
+
+function initSettingsHandlers() {
+  document.getElementById('drive-connect')?.addEventListener('click', () => {
+    alert('Заглушка: здесь будет запуск OAuth Google Drive');
+  });
+
+  document.getElementById('drive-disconnect')?.addEventListener('click', () => {
+    alert('Заглушка: здесь будет выход из Google Drive');
+  });
+
+  document.getElementById('drive-sync-now')?.addEventListener('click', () => {
+    alert('Заглушка: здесь будет синхронизация с облаком');
+  });
+}
+
+function formatDate(ts) {
+  const d = new Date(ts);
+  return d.toLocaleString('ru-RU', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
 }
 
 // Раздел «Квесты»

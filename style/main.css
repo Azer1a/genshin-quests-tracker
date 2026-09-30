@@ -258,3 +258,132 @@ body {
   cursor: pointer;
   align-self: center;
 }
+
+/* Настройки  */
+.settings-section {
+  max-width: 720px;
+  margin-top: 24px;
+}
+
+.settings-section__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.settings-section__lead {
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+/* Карточка Drive */
+.drive-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.drive-card__text {
+  color: var(--text);
+  line-height: 1.5;
+  font-size: 15px;
+}
+
+.drive-card__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Кнопки */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  align-self: flex-start;
+}
+
+.btn__icon {
+  font-size: 14px;
+}
+
+.btn--primary {
+  background: var(--bg-active);
+  color: var(--text-invert);
+  border: 1px solid var(--border-strong);
+}
+
+.btn--primary:hover {
+  filter: brightness(1.05);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn--ghost:hover {
+  background: var(--bg-hover);
+}
+
+/* Поля Drive */
+.drive-field {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.drive-field__label {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.drive-field__value {
+  color: var(--text-muted);
+  padding: 4px 10px;
+  background: var(--bg-panel-2);
+  border-radius: 6px;
+  transition: color .15s, background .15s;
+  cursor: default;
+}
+
+/* Эффект «скрытой почты» показать при наведении */
+.drive-field__value[title] {
+  color: transparent;
+  text-shadow: 0 0 8px rgba(42, 47, 74, 0.6);
+  user-select: none;
+}
+
+.drive-field__value[title]:hover {
+  color: var(--text);
+  text-shadow: none;
+  background: var(--bg-hover);
+  user-select: text;
+}
+
+/* Статус */
+.drive-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.drive-status--ok {
+  color: #2e9c5f;
+}

@@ -5,6 +5,11 @@ export const state = {
   tom: null,
   hero: null,
   completed: new Set(),
+  
+  // Заглушки Google Drive
+  driveConnected: false,
+  driveEmail: 'user@gmail.com',
+  driveLastSync: null,
 };
 
 const STORAGE_KEY = 'genshin_quest_progress';
