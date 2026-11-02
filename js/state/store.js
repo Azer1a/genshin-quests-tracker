@@ -1,3 +1,5 @@
+import { saveToDrive } from '../services/googleDrive.js';
+
 export const state = {
   page: 'home',
   category: null,
@@ -6,13 +8,14 @@ export const state = {
   hero: null,
   completed: new Set(),
   
-  // Заглушки Google Drive
   driveConnected: false,
-  driveEmail: 'user@gmail.com',
+  driveEmail: null,
   driveLastSync: null,
+  driveSyncing: false,
 };
 
 const STORAGE_KEY = 'genshin_quest_progress';
+let syncTimeout = null;
 
 export function loadProgress() {
   try {
@@ -20,6 +23,7 @@ export function loadProgress() {
     if (!raw) return;
     const data = JSON.parse(raw);
     state.completed = new Set(data.completed ?? []);
+    state.driveLastSync = data.lastModified ?? null; // Восстанавливаем время
   } catch (e) {
     console.warn('Не удалось прочитать прогресс', e);
   }
@@ -31,6 +35,8 @@ export function saveProgress() {
     lastModified: Date.now(),
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  state.driveLastSync = data.lastModified;
+  return data;
 }
 
 export function toggleQuest(id) {
@@ -39,5 +45,30 @@ export function toggleQuest(id) {
   } else {
     state.completed.add(id);
   }
-  saveProgress();
+  
+  // 1. Всегда сохраняем локально
+  const data = saveProgress();
+
+  // 2. Если подключен Google Drive — автосинхронизация с задержкой
+  if (state.driveConnected) {
+    if (syncTimeout) clearTimeout(syncTimeout);
+    
+    // Меняем статус на "Синхронизация..."
+    state.driveSyncing = true; 
+    window.dispatchEvent(new CustomEvent('force_render')); // Чтобы UI обновился
+    
+    syncTimeout = setTimeout(async () => {
+      try {
+        await saveToDrive(data);
+        state.driveSyncing = false;
+        state.driveLastSync = data.lastModified;
+      } catch (e) {
+        console.error('Ошибка автосинхронизации:', e);
+        state.driveSyncing = false;
+      } finally {
+        // Обновляем UI после завершения
+        window.dispatchEvent(new CustomEvent('force_render'));
+      }
+    }, 2000);
+  }
 }

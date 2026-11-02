@@ -11,15 +11,22 @@ import {
   getHeroesForMeetings,
 } from '../data/catalog.js';
 import { state, toggleQuest } from '../state/store.js';
+import {
+  signIn,
+  signOut,
+  getUserInfo,
+  saveToDrive,
+  loadFromDrive
+} from '../services/googleDrive.js';
 
 
 export function render() {
   const root = document.getElementById('content');
   root.innerHTML = '';
 
-  if (state.page === 'home')     return renderHome(root);
+  if (state.page === 'home') return renderHome(root);
   if (state.page === 'settings') return renderSettings(root);
-  if (state.page === 'quests')   return renderQuests(root);
+  if (state.page === 'quests') return renderQuests(root);
 }
 
 function renderHome(root) {
@@ -32,11 +39,11 @@ function renderHome(root) {
     <div class="home-cards">
       <div class="home-card">
         <h3>4 категории квестов</h3>
-        <p>Архонта, Легенды, Мировые и Встречи — всё в одном месте.</p>
+        <p>Архонта, Легенды, Мировые и Встречи - всё в одном месте.</p>
       </div>
       <div class="home-card">
         <h3>Локальное сохранение</h3>
-        <p>Прогресс хранится в твоём браузере. Позже добавим синхронизацию с Google Drive.</p>
+        <p>Прогресс хранится в твоём браузере. Добавлена синхронизация с Google Drive, которая пока находится в тестировании</p>
       </div>
     </div>
   `;
@@ -58,8 +65,8 @@ function renderSettings(root) {
       </p>
 
       ${isConnected
-        ? renderDriveConnected(userEmail, lastSync)
-        : renderDriveDisconnected()}
+      ? renderDriveConnected(userEmail, lastSync)
+      : renderDriveDisconnected()}
     </section>
   `;
 
@@ -110,10 +117,13 @@ function renderDriveConnected(email, lastSync) {
 
       <div class="drive-field">
         <span class="drive-field__label">Статус синхронизации:</span>
-        <span class="drive-status drive-status--ok">
-          Синхронизировано
-          <span>✓</span>
-        </span>
+        ${state.driveSyncing 
+          ? `<span class="drive-status">Синхронизация... ⏳</span>` 
+          : `<span class="drive-status drive-status--ok">
+               ${lastSync ? 'Синхронизировано' : 'Ожидает синхронизации'}
+               <span>✓</span>
+             </span>`
+        }
       </div>
 
       <div class="drive-field">
@@ -130,16 +140,80 @@ function renderDriveConnected(email, lastSync) {
 
 function initSettingsHandlers() {
   document.getElementById('drive-connect')?.addEventListener('click', () => {
-    alert('Заглушка: здесь будет запуск OAuth Google Drive');
+    signIn();
   });
 
   document.getElementById('drive-disconnect')?.addEventListener('click', () => {
-    alert('Заглушка: здесь будет выход из Google Drive');
+    signOut();
   });
 
-  document.getElementById('drive-sync-now')?.addEventListener('click', () => {
-    alert('Заглушка: здесь будет синхронизация с облаком');
+  document.getElementById('drive-sync-now')?.addEventListener('click', async () => {
+    await handleSync();
   });
+}
+
+// Обработчик успешного входа
+window.addEventListener('gdrive_login_success', async () => {
+  state.driveConnected = true;
+  state.driveEmail = null;
+  render();
+
+  try {
+    // 1. Получаем email
+    const email = await getUserInfo();
+    if (email) state.driveEmail = email;
+    render(); // Обновляем UI с реальной почтой
+
+    // 2. Загружаем данные с Диска
+    const cloudData = await loadFromDrive();
+    
+    if (cloudData && cloudData.lastModified) {
+      // Получаем локальные данные (безопасно)
+      const localRaw = localStorage.getItem('genshin_quest_progress');
+      const localData = localRaw ? JSON.parse(localRaw) : { lastModified: 0 };
+
+      // Если в облаке данные свежее - спрашиваем пользователя
+      if (cloudData.lastModified > (localData.lastModified || 0)) {
+        if (confirm('На Google Диске найдены более свежие данные. Загрузить их?')) {
+          localStorage.setItem('genshin_quest_progress', JSON.stringify(cloudData));
+          state.completed = new Set(cloudData.completed);
+          state.driveLastSync = cloudData.lastModified;
+          render();
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Ошибка синхронизации при входе:', e);
+  }
+});
+
+// Обработчик выхода
+window.addEventListener('gdrive_logout', () => {
+  state.driveConnected = false;
+  state.driveEmail = null;
+  render();
+});
+
+// Функция ручной синхронизации
+async function handleSync() {
+  state.driveSyncing = true;
+  render();
+  
+  try {
+    const localData = JSON.parse(localStorage.getItem('genshin_quest_progress') || '{}');
+    localData.lastModified = Date.now();
+    
+    await saveToDrive(localData);
+    
+    // Обновляем локальное время
+    localStorage.setItem('genshin_quest_progress', JSON.stringify(localData));
+    state.driveLastSync = localData.lastModified;
+  } catch (e) {
+    alert('Ошибка синхронизации: ' + e.message);
+  } finally {
+    state.driveSyncing = false;
+    render();
+  }
 }
 
 function formatDate(ts) {
@@ -233,7 +307,7 @@ function makeNavButton({ label, total, done, isActive, onClick }) {
   return btn;
 }
 
-// Режим «region» — мировые квесты
+// Режим «region» - мировые квесты
 function renderRegions() {
   const container = document.getElementById('regions-list');
   if (!container) return;
@@ -273,7 +347,7 @@ function renderQuestListByRegion() {
   });
 }
 
-// Режим «tom» — квесты Архонта
+// Режим «tom» - квесты Архонта
 function renderToms() {
   const container = document.getElementById('toms-list');
   if (!container) return;
@@ -311,7 +385,7 @@ function renderArchonList() {
   });
 }
 
-// Режим «flat» — легенды
+// Режим «flat» - легенды
 function renderQuestListFlat() {
   const container = document.getElementById('quests-list');
   if (!container) return;
@@ -322,7 +396,7 @@ function renderQuestListFlat() {
   });
 }
 
-// Режим «hero» — встречи
+// Режим «hero» - встречи
 function renderHeroes() {
   const container = document.getElementById('heroes-list');
   if (!container) return;
@@ -393,9 +467,9 @@ function renderQuestItems(container, quests, title, onToggle, isMeeting = false)
     if (isMeeting) {
       mainText = quest.ending;
     } else if (isStory) {
-      mainText = [quest.tom, quest.chapter, quest.name].filter(Boolean).join(' — ');
+      mainText = [quest.tom, quest.chapter, quest.name].filter(Boolean).join(' - ');
     } else if (quest.chapter) {
-      mainText = `${quest.chapter} — ${quest.name}`;
+      mainText = `${quest.chapter} - ${quest.name}`;
     } else {
       mainText = quest.name;
     }
@@ -418,7 +492,7 @@ function renderQuestItems(container, quests, title, onToggle, isMeeting = false)
         const idx = allArchon.findIndex(q => q.id === quest.id);
         const prev = idx > 0 ? allArchon[idx - 1] : null;
         if (prev) {
-          metaParts.push(`Идёт после: ${prev.tom}, ${prev.chapter ?? ''} — ${prev.name}`);
+          metaParts.push(`Идёт после: ${prev.tom}, ${prev.chapter ?? ''} - ${prev.name}`);
         }
       }
       if (quest.region && quest.region !== 'interlude') {
