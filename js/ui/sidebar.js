@@ -10,6 +10,16 @@ const CATEGORY_ICONS = {
 };
 
 export function initSidebar(onNavigate) {
+  const burgerBtn = document.getElementById('burger-btn');
+  const sidebarNav = document.getElementById('sidebar-nav');
+  
+  if (burgerBtn && sidebarNav) {
+    burgerBtn.addEventListener('click', () => {
+      sidebarNav.classList.toggle('is-open');
+      burgerBtn.classList.toggle('is-active');
+    });
+  }
+
   // Кнопки Главная / Квесты / Настройки
   document.querySelectorAll('.sidebar__item[data-page]').forEach(btn => {
     btn.addEventListener('click', () => {

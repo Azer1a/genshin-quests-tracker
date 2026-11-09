@@ -11,7 +11,7 @@ export function renderQuests(root) {
   if (!state.category) {
     root.innerHTML = `
       <h1 class="page-title">Квесты</h1>
-      <p class="page-lead">Выбери категорию квестов в левом меню.</p>
+      <p class="page-lead">Выбери категорию квестов меню.</p>
     `;
     return;
   }

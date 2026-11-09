@@ -43,7 +43,7 @@ function renderMeetingsList() {
   if (!container) return;
 
   if (!state.hero) {
-    container.innerHTML = `<p class="page-lead">Выбери персонажа слева.</p>`;
+    container.innerHTML = `<p class="page-lead">Выбери персонажа.</p>`;
     return;
   }
 

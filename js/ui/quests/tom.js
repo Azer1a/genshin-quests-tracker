@@ -43,7 +43,7 @@ function renderArchonList() {
   if (!container) return;
 
   if (!state.tom) {
-    container.innerHTML = `<p class="page-lead">Выбери том слева.</p>`;
+    container.innerHTML = `<p class="page-lead">Выбери том.</p>`;
     return;
   }
 

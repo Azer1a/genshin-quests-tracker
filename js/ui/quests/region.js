@@ -46,7 +46,7 @@ function renderQuestListByRegion() {
   if (!container) return;
 
   if (!state.region) {
-    container.innerHTML = `<p class="page-lead">Выбери регион слева.</p>`;
+    container.innerHTML = `<p class="page-lead">Выбери регион.</p>`;
     return;
   }
 

@@ -5,19 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Genshin Quest Tracker</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <link rel="stylesheet" href="style/main.css" />
   <link rel="stylesheet" href="style/reset.css" />
+  <link rel="stylesheet" href="style/main.css" />
   <script type="module" src="js/app.js" defer></script>
 </head>
 <body>
   <div class="app">
     <aside class="sidebar">
-      <div class="sidebar__logo">
-        <img class="sidebar__logo-icon" src="assets/images/Icon_Paimon_Menu.png" alt="" />
-        <span class="sidebar__logo-name">Quest Tracker</span>
+      <div class="sidebar__header">
+        <div class="sidebar__logo">
+          <img class="sidebar__logo-icon" src="assets/images/Icon_Paimon_Menu.png" alt="" />
+          <span class="sidebar__logo-name">Quest Tracker</span>
+        </div>
+        
+        <button class="sidebar__burger" id="burger-btn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
 
-      <nav class="sidebar__nav">
+      <nav class="sidebar__nav" id="sidebar-nav">
         <button class="sidebar__item" data-page="home">
           <img class="sidebar__icon" src="assets/images/home.png" alt="" />
           <span>Главная</span>
